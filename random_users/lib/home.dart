@@ -11,15 +11,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<dynamic> Users = [];
+  String? error;
+  List<dynamic> users = [];
+
   void fetchUsers() async {
-    const url = "https://randomuser.me/api/?results=15";
-    final uri = Uri.parse(url);
-    final responds = await http.get(uri);
-    final json = jsonDecode(responds.body);
-    setState(() {
-      Users = json;
-    });
+    debugPrint("Getting Users");
+    const url = "https://randomuser.me/api/?results=30";
+    try {
+      final uri = Uri.parse(url);
+      final responds = await http.get(uri);
+      final json = jsonDecode(responds.body);
+      setState(() {
+        users = json["results"];
+      });
+      debugPrint("Got users");
+    } catch (e) {
+      error = e.toString();
+    }
   }
 
   @override
@@ -30,27 +38,36 @@ class _MyHomePageState extends State<MyHomePage> {
         elevation: 0.0,
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: Users.length,
-        itemBuilder: (context, index) {
-          final user = Users[index];
-          final email = user["email"];
-          final picture = user["picuture"]["medium"];
-          return Card(
-            child: Row(
-              children: [
-                Image.network(picture),
-                const SizedBox(
-                  width: 5,
-                ),
-                ListTile(
-                  title: Text(email),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+      body: error != null
+          ? Center(
+              child: Text("Error: $error"),
+            )
+          : Center(
+            child: ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (context, index) {
+                  final user = users[index];
+                  final email = user["email"];
+                  final picture = user["picture"]["large"];
+                  return Card(
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(picture),
+                          child: Text((index + 1).toString()),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          child: Text(email),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+          ),
       floatingActionButton: FloatingActionButton(
         onPressed: fetchUsers,
         child: const Icon(
