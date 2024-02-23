@@ -19,11 +19,7 @@ class User {
     required this.picture,
   });
   factory User.fromMap(Map<String, dynamic> e) {
-    final name = UserName(
-      tittle: e['name']['title'],
-      first: e['name']['first'],
-      last: e['name']['last'],
-    );
+    final name = UserName.fromMap(e['name']);
     final picture = UserPicture.fromMap(e['picture']);
     return User(
       gender: e["gender"],
