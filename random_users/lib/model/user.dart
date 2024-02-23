@@ -20,7 +20,7 @@ class User {
   });
   factory User.fromMap(Map<String, dynamic> e) {
     final name = UserName(
-      tittle: e['name']['tittle'],
+      tittle: e['name']['title'],
       first: e['name']['first'],
       last: e['name']['last'],
     );
