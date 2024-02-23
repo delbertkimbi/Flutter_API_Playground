@@ -1,3 +1,6 @@
+import 'package:random_users/model/user_name.dart';
+import 'package:random_users/model/user_picture.dart';
+
 class User {
   final String gender;
   final String email;
@@ -15,29 +18,21 @@ class User {
     required this.name,
     required this.picture,
   });
-}
-
-/// Mapping complex objects
-class UserName {
-  final String tittle;
-  final String first;
-  final String last;
-
-  UserName({
-    required this.tittle,
-    required this.first,
-    required this.last,
-  });
-}
-
-class UserPicture {
-  final String large;
-  final String medium;
-  final String thumbnail;
-
-  UserPicture({
-    required this.large,
-    required this.medium,
-    required this.thumbnail,
-  });
+  factory User.fromMap(Map<String, dynamic> e) {
+    final name = UserName(
+      tittle: e['name']['tittle'],
+      first: e['name']['first'],
+      last: e['name']['last'],
+    );
+    final picture = UserPicture.fromMap(e['picture']);
+    return User(
+      gender: e["gender"],
+      email: e['email'],
+      nat: e['nat'],
+      phone: e['phone'],
+      cell: e['cell'],
+      name: name,
+      picture: picture,
+    );
+  }
 }

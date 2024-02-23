@@ -6,7 +6,7 @@ import 'package:random_users/model/user_name.dart';
 import 'package:random_users/model/user_picture.dart';
 
 class UserAPI {
-  Future<List<User>> fetchUsers() async {
+  static Future<List<User>> fetchUsers() async {
     const url = "https://randomuser.me/api/?results=30";
 
     final uri = Uri.parse(url);
@@ -14,25 +14,7 @@ class UserAPI {
     final json = jsonDecode(responds.body);
     final results = json["results"] as List<dynamic>;
     final users = results.map((e) {
-      final name = UserName(
-        tittle: e['name']['tittle'],
-        first: e['name']['first'],
-        last: e['name']['last'],
-      );
-      final picture = UserPicture(
-        large: e['picture']['large'],
-        medium: e['picture']['medium'],
-        thumbnail: e['picture']['thumbnail'],
-      );
-      return User(
-        gender: e["gender"],
-        email: e['email'],
-        nat: e['nat'],
-        phone: e['phone'],
-        cell: e['cell'],
-        name: name,
-        picture: picture,
-      );
+      return User.fromMap(e);
     }).toList();
     return users;
   }
